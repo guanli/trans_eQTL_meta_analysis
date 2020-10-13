@@ -1,0 +1,14 @@
+{    
+    #settings for get_tested_gene
+    "SCHEME": "SAMPLESIZE", ##choose the other option have to also specify STDERR
+    "MARKERLABEL" : "meta_marker",
+    "WEIGHTLABEL": "weight",
+    "PVALUELABEL": "pvalue",
+    "EFFECTLABEL": "beta",
+    "ALLELE": "alt ref",
+    #setting for gnr_metal_script
+    "STUDY_1_RES_DIR" : "/net/snowwhite/home/guanli/muscle_trans_snk/eQTL/meta/data",
+    "STUDY_2_RES_DIR" : "/net/snowwhite/home/guanli/gtex_muscle_trans_snk/eQTL/meta/data",
+    #setting for subset_metal_res
+    "SUBSET_METAL_R" : "scripts/subset_meta_res.R"
+}
