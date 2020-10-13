@@ -11,5 +11,5 @@ Run the Snakemake pipeline with the following command. <br />
 `snakemake --snakefile peer_opt_trans --configfile peer_opt_trans.json`
 
 Output in the current folder  <br />
-  -trans_eGene_peer_factors-qtltools_nominal-summary.tsv.gz: the number of genes with QTL from result using different number of PEER factors <br />
-  -trans_eGene_peer_factors-qtltools_nominal-summary.pdf: a line plot displaying the above results
+  - trans_eGene_peer_factors-qtltools_nominal-summary.tsv.gz: the number of genes with QTL from result using different number of PEER factors <br />
+  - trans_eGene_peer_factors-qtltools_nominal-summary.pdf: a line plot displaying the above results
