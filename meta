@@ -1,0 +1,88 @@
+#!/usr/bin/env snakemake
+#one rule left is mkdir prep_metal
+configfile: "meta.json"
+
+with open('common_trans_tested_genes.txt') as f: #should be common genes
+    gene_names=f.read().splitlines()
+             
+rule final:
+    input:
+        'metal_sig.txt'
+        
+rule gnr_metal_script:
+    #input:
+        #study1='/net/snowwhite/home/guanli/muscle_trans_snk/eQTL/meta/data/gene_{gene_names}.tab.gz',
+        #study2='/net/snowwhite/home/guanli/gtex_muscle_trans_snk/eQTL/meta/data/gene_{gene_names}.tab.gz'
+        #study1=expand('{study1_res_dir}/gene_{gene_names}.tab.gz',study1_res_dir=config['STUDY_1_RES_DIR'],gene_names=gene_names),
+        #study2=expand('{study2_res_dir}/gene_{gene_names}.tab.gz',study2_res_dir=config['STUDY_2_RES_DIR'],gene_names=gene_names)   
+    output:
+        'meta_{gene_names}.txt'
+    params:
+        scheme = config['SCHEME'],
+        markerlabel = config['MARKERLABEL'],
+        weightlabel = config['WEIGHTLABEL'],
+        pvaluelabel = config['PVALUELABEL'],
+        effectlabel =config['EFFECTLABEL'],
+        allele = config['ALLELE']
+    shell:
+        'echo -e "SCHEME {params.scheme}" > {output}; '
+        'echo -e "SEPARATOR TAB" >> {output}; '
+        'echo -e "COLUMNCOUNTING STRICT" >> {output}; '
+        'echo -e "GENOMICCONTROL OFF" >> {output}; '
+        'echo -e "LOGPVALUE ON" >> {output}; '
+        'echo -e "MARKERLABEL {params.markerlabel}" >> {output}; '
+        'echo -e "WEIGHTLABEL {params.weightlabel}" >> {output}; '
+        'echo -e "PVALUELABEL {params.pvaluelabel}" >> {output}; '
+        'echo -e "EFFECTLABEL {params.effectlabel}" >> {output}; '
+        'echo -e "ALLELE {params.allele}" >> {output}; '
+        'echo -e "PROCESS /net/snowwhite/home/guanli/muscle_trans_snk/eQTL/meta/data/gene_{wildcards.gene_names}.tab.gz" >> {output}; '
+        'echo -e "PROCESS /net/snowwhite/home/guanli/gtex_muscle_trans_snk/eQTL/meta/data/gene_{wildcards.gene_names}.tab.gz" >> {output}; '
+        'echo -e "OUTFILE metal_res/meta_{wildcards.gene_names}_ .tbl " >> {output}; '
+        'echo -e "ANALYZE HETEROGENEITY" >> {output}; '
+        
+rule metal:
+    input:
+        rules.gnr_metal_script.output
+    output:
+        res = 'metal_res/meta_{gene_names}_1.tbl',
+        info = 'metal_res/meta_{gene_names}_1.tbl.info'
+    shell:
+        'metal {input} >> meta_{wildcards.gene_names}.log'
+
+rule gz_metal_res:
+    input:
+        res = rules.metal.output.res,
+        info = rules.metal.output.info
+    output:
+        res = 'metal_res/meta_{gene_names}_1.tbl.gz',
+        info = 'metal_res/meta_{gene_names}_1.tbl.info.gz'
+    shell:
+        'gzip {input.res} ; '
+        'gzip {input.info}  '
+
+rule subset_metal_res:
+    input:
+        rules.gz_metal_res.output.res
+    output:
+        expand('metal_res_subset/metal_subset_{gene_names}.tab.gz', gene_names=gene_names)
+        #'metal_res_subset/metal_subset_{gene_names}.tab.gz'
+    params:
+        rscript = config['SUBSET_METAL_R'],
+    shell:
+        'Rscript {params.rscript} -i {input} -o /net/snowwhite/home/guanli/fusion_gtex_trans_meta/metal_res_subset/metal_subset_ ;'
+        
+rule metal_sig_sum:
+    input:
+        rules.subset_metal_res.output
+        #expand('metal_res_subset/metal_subset_{gene_names}.tab.gz', gene_names=gene_names)
+    output:
+        'metal_sig.txt'
+    shell:
+        'echo -e "MarkerName\tZscore\tlogP\tDirection\tHetISq\tHetChiSq\tHetDf\tlogHetP" > {output}; '
+        'hits=`gunzip -c metal_res_subset/metal_subset_{wildcards.gene_names}.tab.gz | '
+        'awk \'{{ if ($6<=2.141e-12) print $1"\\t"$5"\\t"$6"\\t"$7"\\t"$8"\\t"$9"\\t"$10"\\t"$11 }}\'`; '
+        'echo -e "$hits" >> {output}; '
+        
+
+        
+        
