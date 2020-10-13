@@ -1,0 +1,54 @@
+{
+    # Docker image - by default used by singularity (--use-singularity)
+    "DOCKER" : "docker://letaylor/moltraits",
+        
+    # settings for ped_for_EPACTS
+    "PEER_FACTORS_GWAS" : 100, 
+    "PRX_PED_EPACTS" : "peer_100", 
+    "N_GWAS_PEER" : "100", 
+    "PARAM_EPACTS_COV" : "--cov AdiposeSubcut --cov LymphocyteEBVtx --cov MuscleSkeletal --cov BloodWhole --cov type2A.fiber.proxy --cov type2X.fiber.proxy --cov smoke_current --cov rin --cov tin_mean --cov PC3 --cov PC4 --cov age_at_biopsy --cov PC1 --cov PC2 --cov sex --cov batch_adi_1 --cov batch_adi_2 --cov batch_adi_3 --cov batch_adi_4 --cov batch_adi_5 --cov batch_adi_6 --cov batch_adi_7 --cov batch_adi_8 --cov batch_adi_9 --cov batch_adi_10 --cov batch_adi_11 --cov batch_adi_12 --cov batch_adi_13 --cov batch_adi_14 --cov batch_adi_15 --cov batch_adi_16 --cov batch_adi_17 --cov batch_adi_18 --cov batch_adi_19 --cov batch_adi_20 --cov batch_adi_21 --cov batch_adi_22 --cov batch_adi_23 --cov batch_adi_24 --cov batch_adi_25 --cov batch_adi_26 --cov ogtt_status_biopsy_IFG --cov ogtt_status_biopsy_IGT --cov ogtt_status_biopsy_T2D --cov site_Helsinki --cov site_Kuopio",
+    "PEER_GWAS_P_COL" : "PVALUE",
+    "PEER_GWAS_FDR" : 0.1,
+    
+    #settings for prep_moltraits:
+    "INPUT_PREP_PHENO_QTLTOOLS_START_COL" : 9,
+    
+    #settings for qtltools__prep_moltraits:
+    "PARAM_QTLTOOLS_Y" : peer_input,
+    
+    #settings for qtltools__prep_covs:
+    "PARAM_PEER_QTLTOOLS_BASE_COVAR" : "~/muscle_trans_snk/data/covariates.txt.gz",
+    
+  
+    #settings for tltools__nominal_in_subdir_trans:
+    "TRANS_NJOBS_NOMINAL" : 10,
+    "TRANS_NOMINAL_CUTOFF": 1e-7,
+    "TRNAS_PARAM_QTLTOOLS": "--cov data/covariates.txt.gz",
+
+    #settings for qtltools__optimize_nominal:
+    "PEER_FACTORS_OPT":["1","2","3","4","5","6","7","8","9","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80"],
+
+    #settings common in PEER, cis and trans-eQTL snakefile
+    "NJOBS_NOMINAL" : 10,
+    "PARAM_QTLTOOLS" : "--cov data/covariates.txt.gz",
+    "PARAM_QTLTOOLS_NOMINAL_CUTOFF" : 0.05,
+    "NJOBS_PERMUTE" : 10,
+    "NJOBS_CONDITIONAL" : 10,
+    "NPERM" : 1000,
+
+    #settings specific for trans-eQTL snakefile
+    ##approximate settings
+    "PARAM_QTLTOOLS_APX_NULL_SMP_NUM" : 3,
+    "PARAM_QTLTOOLS_APX_NULL_OUT" : "trans.sample",
+    "PARAM_QTLTOOLS_APX_NULL_ADJ_VAR_THRESH" : 0.05,
+    "PARAM_QTLTOOLS_ADJ_VAR_OUT" : "trans.adjust",
+    "PARAM_QTLTOOLS_ADJ_GENE_SCRIPT" : "/net/snowwhite/home/guanli/softwares/QTLtool/script/runFDR_atrans.R",
+    "PARAM_QTLTOOLS_APX_NULL_ADJ_GENE_THRESH" : 0.05,
+    "PARAM_QTLTOOLS_ADJ_GENE_OUT" : "gene_adjust.txt",
+
+    #settings for ld_prune
+    "PLINK_LD_PRUNE" : "1000 500 0.8"
+
+
+}
+
