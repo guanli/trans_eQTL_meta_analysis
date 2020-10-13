@@ -1,0 +1,29 @@
+{
+    # Docker image - by default used by singularity (--use-singularity)
+    "DOCKER" : "docker://letaylor/moltraits",
+    
+    # general settings
+    "NJOBS_NOMINAL" : 10,
+    "NJOBS_PERMUTE" : 30,
+    "NJOBS_CONDITIONAL" : 10,
+    "NPERM" : 1000,
+    "PARAM_QTLTOOLS" : "--cov data/covariates.txt.gz",
+
+    # QTLtools settings
+    ##general settings
+    "TRNAS_PARAM_QTLTOOLS" : "--cov data/covariates.txt.gz",
+    ##nominal settings
+    "TRANS_NOMINAL_CUTOFF" : 5e-2,
+    "TRANS_NJOBS_NOMINAL" : 10,
+    ##approximate settings
+    "PARAM_QTLTOOLS_APX_NULL_SMP_NUM" : 3,
+    "PARAM_QTLTOOLS_APX_NULL_OUT" : trans.sample,
+    "PARAM_QTLTOOLS_APX_NULL_ADJ_VAR_THRESH" : 0.05,
+    "PARAM_QTLTOOLS_ADJ_VAR_OUT" : trans.adjust,
+    "PARAM_QTLTOOLS_ADJ_GENE_SCRIPT" : /net/snowwhite/home/guanli/softwares/QTLtool/script/runFDR_atrans.R,
+    "PARAM_QTLTOOLS_APX_NULL_ADJ_GENE_THRESH" : 0.05,
+    "PARAM_QTLTOOLS_ADJ_GENE_OUT" : "gene_adjust.txt",
+    #settings for qtltools_distal__nominal_final
+    "TRANS_NJOBS_NOMINAL_FINAL" : 23657
+}
+  
