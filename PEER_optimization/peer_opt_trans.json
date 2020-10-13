@@ -1,7 +1,4 @@
-{
-    # Docker image - by default used by singularity (--use-singularity)
-    "DOCKER" : "docker://letaylor/moltraits",
-        
+{     
     # settings for ped_for_EPACTS
     "PEER_FACTORS_GWAS" : 100, 
     "PRX_PED_EPACTS" : "peer_100", 
